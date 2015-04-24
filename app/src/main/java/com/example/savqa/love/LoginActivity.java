@@ -8,9 +8,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
@@ -25,9 +22,12 @@ import com.vk.sdk.util.VKUtil;
 public class LoginActivity extends ActionBarActivity {
 
     private static final String appId = "4890105";
-    private static String[] vkScope = new String[]{VKScope.WALL};
 
-    private Button loginButton;
+    public static final String TOKEN_KEY = "VK_ACCESS_TOKEN";
+    public static final String[] scope = new String[] {
+            VKScope.FRIENDS,
+            VKScope.NOHTTPS
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +35,18 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login);
 
         VKUIHelper.onCreate(this);
-        VKSdk.initialize(sdkListener, appId);
+        VKSdk.initialize(sdkListener, appId, VKAccessToken.tokenFromSharedPreferences(this, TOKEN_KEY));
 
-        if(VKSdk.wakeUpSession()) {
-           startMainActivity();
-           return;
+        findViewById(R.id.loginBtnVK).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VKSdk.authorize(scope, true, false);
+            }
+        });
+
+        if (VKSdk.wakeUpSession()) {
+            startMainActivity();
+            return;
         }
 
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
@@ -54,7 +61,7 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
-            VKSdk.authorize(vkScope);
+            VKSdk.authorize(scope);
         }
 
         @Override
@@ -71,9 +78,32 @@ public class LoginActivity extends ActionBarActivity {
 
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
-            startMainActivity();
+           startMainActivity();
         }
+
     };
+
+    private void startMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        VKUIHelper.onActivityResult(this,requestCode,resultCode,data);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,105 +127,4 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        VKUIHelper.onResume(this);
-        if (VKSdk.isLoggedIn()) {
-            showLogout();
-        } else {
-            showLogin();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        VKUIHelper.onDestroy(this);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        VKUIHelper.onActivityResult(this,requestCode,resultCode,data);
-
-    }
-
-    private void startMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
-    private void showLogout() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, new LogoutFragment())
-                .commit();
-    }
-
-    private void showLogin() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, new LoginFragment())
-                .commit();
-    }
-
-    public static class LoginFragment extends android.support.v4.app.Fragment {
-        public LoginFragment() {
-            super();
-        }
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_login, container, false);
-        }
-
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            getView().findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    VKSdk.authorize(vkScope, true, false);
-                }
-            });
-
-            getView().findViewById(R.id.force_oauth_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    VKSdk.authorize(vkScope, true, true);
-                }
-            });
-        }
-    }
-    public static class LogoutFragment extends android.support.v4.app.Fragment {
-        public LogoutFragment() {
-            super();
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_logout, container, false);
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            getView().findViewById(R.id.continue_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((LoginActivity) getActivity()).startMainActivity();
-                }
-            });
-
-            getView().findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    VKSdk.logout();
-                    if (!VKSdk.isLoggedIn()) {
-                        ((LoginActivity) getActivity()).showLogin();
-                    }
-                }
-            });
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.savqa.love;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 VKSdk.logout();
+                startLoginActivity();
             }
         });
     }
@@ -47,5 +49,9 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

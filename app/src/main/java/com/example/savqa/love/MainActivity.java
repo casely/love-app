@@ -1,21 +1,19 @@
 package com.example.savqa.love;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
@@ -30,13 +28,18 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        OutputWelcomeTextVK();
+
         VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
 
-        @Override
-        public void onComplete (VKResponse response) {
+            @Override
+            public void onComplete (VKResponse response) {
                 VKApiUser user = ((VKList<VKApiUser>)response.parsedModel).get(0);
-                TextView t = (TextView)findViewById(R.id.editText);
-                t.setText("Привет " + user.first_name + " " + user.last_name + user.photo_50);
+               ParseObject obj = new ParseObject("base");
+                obj.put("firstname",user.first_name);
+                obj.put("lastname",user.last_name);
+                obj.saveInBackground();
+
 
             }
         });
@@ -51,6 +54,33 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
+
+
+    private void startLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    private void OutputWelcomeTextVK() {
+        VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
+
+            @Override
+            public void onComplete (VKResponse response) {
+                VKApiUser user = ((VKList<VKApiUser>)response.parsedModel).get(0);
+                TextView t = (TextView)findViewById(R.id.editText);
+                t.setText("Привет " + user.first_name);
+
+
+            }
+        });
+    }
+
+    /*private void OutputWelcomeTextParse() {
+        String a = ParseUser.getCurrentUser().getUsername();
+
+        TextView t = (TextView)findViewById(R.id.editText);
+        t.setText("Привет " + a);
+    }*/
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,9 +102,5 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startLoginActivity() {
-        startActivity(new Intent(this, LoginActivity.class));
     }
 }

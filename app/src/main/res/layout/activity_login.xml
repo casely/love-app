@@ -17,7 +17,7 @@
         android:id="@+id/loginBtnVK"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Login with VK"
+        android:text="@string/loginVK"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
         android:layout_gravity="center_vertical"
@@ -58,7 +58,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:id="@+id/loginBtn"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"

@@ -32,7 +32,6 @@ import com.vk.sdk.util.VKUtil;
 public class LoginActivity extends ActionBarActivity {
 
     private static final String appId = "4890105";
-
     public static final String TOKEN_KEY = "VK_ACCESS_TOKEN";
     public static final String[] scope = new String[] {
             VKScope.FRIENDS,
@@ -47,9 +46,13 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         VKUIHelper.onCreate(this);
+
+        // Инициализация ВК sdk
         VKSdk.initialize(sdkListener, appId, VKAccessToken.tokenFromSharedPreferences(this, TOKEN_KEY));
 
+        // Обработчик нажатия на кнопку логина через ВК
         findViewById(R.id.loginBtnVK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,18 +60,7 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
 
-        findViewById(R.id.signUpBtn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
-
-        if (VKSdk.wakeUpSession() || ParseUser.getCurrentUser() != null) {
-            startMainActivity();
-            return;
-        }
-
+        // Опечаток ВК sdk
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         Log.d("Fingerprint", fingerprint[0]);
 
@@ -77,35 +69,52 @@ public class LoginActivity extends ActionBarActivity {
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (
-                        actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                    login();
+                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                    UserLogin();
                     return true;
                 }
                 return false;
             }
         });
 
-        // Set up the submit button click handler
+        // Кнопка логина
         Button actionButton = (Button) findViewById(R.id.loginBtn);
         actionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                login();
+                UserLogin();
             }
         });
+
+        // Кнопка регистрации
+        findViewById(R.id.signUpBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
+
+        // Проверка
+        if (VKSdk.wakeUpSession() && ParseUser.getCurrentUser() != null) {
+            startMainActivity();
+            return;
+        }
     }
 
+    // Переопредение методов ВК
     private final VKSdkListener sdkListener = new VKSdkListener() {
+        // Выдача капчи
         @Override
         public void onCaptchaError(VKError captchaError) {
             new VKCaptchaDialog(captchaError).show();
         }
 
+        // При ошибке токена
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
             VKSdk.authorize(scope);
         }
 
+        // При закрытии доступа
         @Override
         public void onAccessDenied(VKError authorizationError) {
             new AlertDialog.Builder(VKUIHelper.getTopActivity())
@@ -113,11 +122,13 @@ public class LoginActivity extends ActionBarActivity {
                     .show();
         }
 
+        // При получении нового токена
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
             startMainActivity();
         }
 
+        // При успешной проверке токена
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
            startMainActivity();
@@ -125,10 +136,12 @@ public class LoginActivity extends ActionBarActivity {
 
     };
 
+    // Открытие mainactivity
     private void startMainActivity() {
         startActivity(new Intent(this, MainActivity.class));
     }
 
+    // Переопределение методов активити для ВК Апи
     @Override
     protected void onResume() {
         super.onResume();
@@ -147,6 +160,61 @@ public class LoginActivity extends ActionBarActivity {
         VKUIHelper.onActivityResult(this,requestCode,resultCode,data);
     }
 
+    // Метод логина
+    private void UserLogin() {
+
+        // Получение значений с текстовых полей
+        String username = usernameEditText.getText().toString().trim();
+        String password = passwordEditText.getText().toString().trim();
+
+        // Валидация (проверка ввода)
+        boolean validationError = false;
+        StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
+        if (username.length() == 0) {
+            validationError = true;
+            validationErrorMessage.append(getString(R.string.error_blank_username));
+        }
+        if (password.length() == 0) {
+            if (validationError) {
+                validationErrorMessage.append(getString(R.string.error_join));
+            }
+            validationError = true;
+            validationErrorMessage.append(getString(R.string.error_blank_password));
+        }
+        validationErrorMessage.append(getString(R.string.error_end));
+
+        // Выдача тоста при ошибке
+        if (validationError) {
+            Toast.makeText(LoginActivity.this, validationErrorMessage.toString(), Toast.LENGTH_LONG)
+                    .show();
+            return;
+        }
+
+        // Создание прогрессдиалога
+        final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
+        dialog.setMessage(getString(R.string.progress_login));
+        dialog.show();
+
+
+        // Проверка юзернэйма и пароля на совпадение со значениями в таблице
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                dialog.dismiss();
+                if (e != null) {
+                    // Показ тоста ошибки
+                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    // Открытие интента при успехе
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    // Методы ActionBar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -167,55 +235,6 @@ public class LoginActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void login() {
-        String username = usernameEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-
-        // Validate the log in data
-        boolean validationError = false;
-        StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
-        if (username.length() == 0) {
-            validationError = true;
-            validationErrorMessage.append(getString(R.string.error_blank_username));
-        }
-        if (password.length() == 0) {
-            if (validationError) {
-                validationErrorMessage.append(getString(R.string.error_join));
-            }
-            validationError = true;
-            validationErrorMessage.append(getString(R.string.error_blank_password));
-        }
-        validationErrorMessage.append(getString(R.string.error_end));
-
-        // If there is a validation error, display the error
-        if (validationError) {
-            Toast.makeText(LoginActivity.this, validationErrorMessage.toString(), Toast.LENGTH_LONG)
-                    .show();
-            return;
-        }
-
-        // Set up a progress dialog
-        final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
-        dialog.setMessage(getString(R.string.progress_login));
-        dialog.show();
-        // Call the Parse login method
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                dialog.dismiss();
-                if (e != null) {
-                    // Show the error message
-                    Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    // Start an intent for the dispatch activity
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
     }
 
 }

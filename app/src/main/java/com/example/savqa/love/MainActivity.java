@@ -1,16 +1,14 @@
 package com.example.savqa.love;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
@@ -19,7 +17,7 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiUser;
 import com.vk.sdk.api.model.VKList;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     private Button logoutButton;
 
@@ -29,30 +27,6 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         OutputWelcomeTextVK();
-
-        VKApi.users().get().executeWithListener(new VKRequest.VKRequestListener() {
-
-            @Override
-            public void onComplete (VKResponse response) {
-                VKApiUser user = ((VKList<VKApiUser>)response.parsedModel).get(0);
-               ParseObject obj = new ParseObject("base");
-                obj.put("firstname",user.first_name);
-                obj.put("lastname",user.last_name);
-                obj.saveInBackground();
-
-
-            }
-        });
-
-        logoutButton = (Button) findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                VKSdk.logout();
-                ParseUser.logOut();
-                startLoginActivity();
-            }
-        });
     }
 
 
@@ -97,8 +71,10 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.logout) {
+            VKSdk.logout();
+            ParseUser.logOut();
+            startLoginActivity();
         }
 
         return super.onOptionsItemSelected(item);

@@ -38,7 +38,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:hint="@string/prompt_username"
         android:id="@+id/username"
         android:layout_marginTop="69dp"

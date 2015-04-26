@@ -3,15 +3,16 @@
     <string name="action_settings">Настройки</string>
     <string name="title_activity_login">Вход в приложение</string>
 
-    <string name="prompt_username">Никнейм</string>
+    <string name="prompt_username">Адрес почты</string>
     <string name="prompt_password">Пароль</string>
+    <string name="prompt_name">Имя</string>
     <string name="prompt_password_again">Повторите пароль</string>
 
     <string name="signup">Регистрация</string>
     <string name="loginVK">Вход через ВК</string>
 
     <string name="error_intro">"Пожалуйста "</string>
-    <string name="error_blank_username">введите никнейм</string>
+    <string name="error_blank_username">введите почту</string>
     <string name="error_blank_password">введите пароль</string>
     <string name="error_mismatched_passwords">введите выбранный пароль дважды</string>
     <string name="error_join">", и "</string>
@@ -19,4 +20,5 @@
     <string name="progress_signup">Выполняется регистрация &#8230;</string>
     <string name="progress_login">Выполняется вход &#8230;</string>
     <string name="login">Вход</string>
+    <string name="logout">Выход</string>
 </resources>

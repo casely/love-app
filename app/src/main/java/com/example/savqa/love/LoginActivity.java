@@ -1,14 +1,12 @@
 package com.example.savqa.love;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -29,7 +27,7 @@ import com.vk.sdk.dialogs.VKCaptchaDialog;
 import com.vk.sdk.util.VKUtil;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
     private static final String appId = "4890105";
     public static final String TOKEN_KEY = "VK_ACCESS_TOKEN";
@@ -38,7 +36,7 @@ public class LoginActivity extends ActionBarActivity {
             VKScope.NOHTTPS
     };
 
-    private EditText usernameEditText;
+    private EditText emailEditText;
     private EditText passwordEditText;
 
     @Override
@@ -57,6 +55,7 @@ public class LoginActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 VKSdk.authorize(scope, true, false);
+
             }
         });
 
@@ -64,7 +63,7 @@ public class LoginActivity extends ActionBarActivity {
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         Log.d("Fingerprint", fingerprint[0]);
 
-        usernameEditText = (EditText) findViewById(R.id.username);
+        emailEditText = (EditText) findViewById(R.id.username);
         passwordEditText = (EditText) findViewById(R.id.password);
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -94,7 +93,7 @@ public class LoginActivity extends ActionBarActivity {
         });
 
         // Проверка
-        if (VKSdk.wakeUpSession() && ParseUser.getCurrentUser() != null) {
+        if (VKSdk.wakeUpSession() || ParseUser.getCurrentUser() != null) {
             startMainActivity();
             return;
         }
@@ -164,13 +163,13 @@ public class LoginActivity extends ActionBarActivity {
     private void UserLogin() {
 
         // Получение значений с текстовых полей
-        String username = usernameEditText.getText().toString().trim();
+        String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
         // Валидация (проверка ввода)
         boolean validationError = false;
         StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
-        if (username.length() == 0) {
+        if (email.length() == 0) {
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_blank_username));
         }
@@ -195,9 +194,8 @@ public class LoginActivity extends ActionBarActivity {
         dialog.setMessage(getString(R.string.progress_login));
         dialog.show();
 
-
         // Проверка юзернэйма и пароля на совпадение со значениями в таблице
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
+        ParseUser.logInInBackground(email, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
                 dialog.dismiss();
@@ -213,28 +211,4 @@ public class LoginActivity extends ActionBarActivity {
             }
         });
     }
-
-    // Методы ActionBar
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }

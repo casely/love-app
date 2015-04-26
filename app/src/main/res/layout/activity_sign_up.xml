@@ -14,10 +14,10 @@
             android:orientation="vertical" >
 
             <EditText
-                android:id="@+id/username_edit_text"
+                android:id="@+id/name_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/prompt_username"
+                android:hint="@string/prompt_name"
                 android:inputType="textPersonName"
                 android:maxLines="1"
                 android:singleLine="true" />
@@ -47,6 +47,15 @@
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:singleLine="true" />
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:editable="false"
+                android:ems="10"
+                android:id="@+id/dp" />
 
             <Button
                 android:id="@+id/action_button"

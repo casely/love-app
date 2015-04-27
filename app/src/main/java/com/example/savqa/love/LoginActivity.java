@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,29 +14,44 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.VKSdkListener;
 import com.vk.sdk.VKUIHelper;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
+import com.vk.sdk.api.model.VKApiUser;
+import com.vk.sdk.api.model.VKApiUserFull;
+import com.vk.sdk.api.model.VKList;
 import com.vk.sdk.dialogs.VKCaptchaDialog;
 import com.vk.sdk.util.VKUtil;
+
+import java.io.InputStream;
 
 
 public class LoginActivity extends Activity {
 
     private static final String appId = "4890105";
     public static final String TOKEN_KEY = "VK_ACCESS_TOKEN";
+
+    // Права доступа
     public static final String[] scope = new String[] {
-            VKScope.FRIENDS,
-            VKScope.NOHTTPS
+            VKScope.NOHTTPS,
+            VKScope.PHOTOS
     };
 
     private EditText emailEditText;
@@ -44,7 +62,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         VKUIHelper.onCreate(this);
 
         // Инициализация ВК sdk
@@ -54,8 +71,12 @@ public class LoginActivity extends Activity {
         findViewById(R.id.loginBtnVK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VKSdk.authorize(scope, true, false);
-
+                if (VKSdk.isLoggedIn()) {
+                    VKSdk.logout();
+                }
+                else {
+                    VKSdk.authorize(scope, true, false);
+                }
             }
         });
 
@@ -130,7 +151,7 @@ public class LoginActivity extends Activity {
         // При успешной проверке токена
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
-           startMainActivity();
+            startMainActivity();
         }
 
     };
@@ -140,11 +161,34 @@ public class LoginActivity extends Activity {
         startActivity(new Intent(this, MainActivity.class));
     }
 
+    private void SignUpFromVK() {
+        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name,bdate"));
+
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                VKApiUserFull user = ((VKList<VKApiUserFull>)response.parsedModel).get(0);
+
+                ParseUser puser = new ParseUser();
+                puser.setUsername("vk" + user.id);
+                puser.put("firstname", user.first_name);
+                puser.setPassword("111");
+                puser.put("dateofbirth", user.bdate);
+
+                puser.signUpInBackground();
+
+
+            }
+        });
+
+    }
+
     // Переопределение методов активити для ВК Апи
     @Override
     protected void onResume() {
         super.onResume();
         VKUIHelper.onResume(this);
+        SignUpFromVK();
     }
 
     @Override

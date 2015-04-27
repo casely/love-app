@@ -14,6 +14,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ public class SignUpActivity extends Activity {
     private EditText passwordView;
     private EditText passwordAgainView;
     private EditText emailView;
+    public RadioGroup radioGenderGroup;
+
 
     public EditText dpDate;
     private int year_x, month_x, day_x;
@@ -166,6 +170,20 @@ public class SignUpActivity extends Activity {
         user.setEmail(email);
         user.put("dateofbirth", date);
 
+        radioGenderGroup = (RadioGroup)findViewById(R.id.radioSex);
+        switch (radioGenderGroup.getCheckedRadioButtonId()) {
+            case R.id.radioMale:
+                user.put("gender", 2);
+                break;
+            case R.id.radioFemale:
+                user.put("gender", 1);
+                break;
+            default:
+                Toast.makeText(SignUpActivity.this, "Выберите пол", Toast.LENGTH_LONG).show();
+                break;
+
+        }
+
 
         // Сохранение данных в таблицу
         user.signUpInBackground(new SignUpCallback() {
@@ -184,5 +202,7 @@ public class SignUpActivity extends Activity {
             }
         });
     }
+
+
 
 }

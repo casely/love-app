@@ -162,7 +162,7 @@ public class LoginActivity extends Activity {
     }
 
     private void SignUpFromVK() {
-        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name,bdate"));
+        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name,bdate, sex"));
 
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
@@ -174,6 +174,7 @@ public class LoginActivity extends Activity {
                 puser.put("firstname", user.first_name);
                 puser.setPassword("111");
                 puser.put("dateofbirth", user.bdate);
+                puser.put("gender", user.sex);
 
                 puser.signUpInBackground();
 

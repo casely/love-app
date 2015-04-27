@@ -54,8 +54,28 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 android:editable="false"
+                android:hint="@string/dp"
                 android:ems="10"
                 android:id="@+id/dp" />
+
+            <RadioGroup
+                android:id="@+id/radioSex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_male" />
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radio_female" />
+
+            </RadioGroup>
 
             <Button
                 android:id="@+id/action_button"

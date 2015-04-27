@@ -11,6 +11,10 @@
     <string name="signup">Регистрация</string>
     <string name="loginVK">Вход через ВК</string>
 
+    <string name="radio_male">Мужчина</string>
+    <string name="radio_female">Женщина</string>
+    <string name="dp">01.1.1990</string>
+
     <string name="error_intro">"Пожалуйста "</string>
     <string name="error_blank_username">введите почту</string>
     <string name="error_blank_password">введите пароль</string>

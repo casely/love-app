@@ -1,115 +1,83 @@
 package com.example.savqa.love;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.PackageInstaller;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 
+public class MainActivity extends FragmentActivity implements
+        ActionBar.TabListener {
 
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKApi;
-import com.vk.sdk.api.VKApiConst;
-import com.vk.sdk.api.VKParameters;
-import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
-import com.vk.sdk.api.model.VKApiUser;
-import com.vk.sdk.api.model.VKApiUserFull;
-import com.vk.sdk.api.model.VKList;
-import com.vk.sdk.api.model.VKPhotoArray;
-
-import java.io.InputStream;
-
-public class MainActivity extends Activity {
-
-    private ImageView img;
+    private ViewPager viewPager;
+    private ViewPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "Сообщения", "Знакомства", "Профиль" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        OutputWelcomeTextVK();
-    }
+        // Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        actionBar = getActionBar();
+        mAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-    private void startLoginActivity() {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                    .setTabListener(this));
+        }
 
-    private void OutputWelcomeTextVK() {
-        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name, photo_200"));
-        request.executeWithListener(new VKRequest.VKRequestListener() {
+        /**
+         * on swiping the viewpager make respective tab selected
+         * */
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
-            public void onComplete(VKResponse response) {
-                VKApiUserFull user = ((VKList<VKApiUserFull>)response.parsedModel).get(0);
-                new DownloadImageTask((ImageView) findViewById(R.id.ava))
-                                .execute(user.photo_200);
+            public void onPageSelected(int position) {
+                // on changing the page
+                // make respected tab selected
+                actionBar.setSelectedNavigationItem(position);
+            }
 
-                TextView t = (TextView)findViewById(R.id.editText);
-                t.setText("Привет " + user.first_name);
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
 
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
             }
         });
+
+        viewPager.setCurrentItem(1, false);
+
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.logout) {
-            VKSdk.logout();
-            ParseUser.logOut();
-            startLoginActivity();
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        // on tab selected
+        // show respected fragment view
+        viewPager.setCurrentItem(tab.getPosition());
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
     }
+
+    @Override
+    public void onBackPressed() {
+    }
+
 }

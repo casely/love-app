@@ -54,6 +54,7 @@ public class LoginActivity extends Activity {
             VKScope.PHOTOS
     };
 
+
     private EditText emailEditText;
     private EditText passwordEditText;
 
@@ -64,8 +65,11 @@ public class LoginActivity extends Activity {
 
         VKUIHelper.onCreate(this);
 
-        // Инициализация ВК sdk
         VKSdk.initialize(sdkListener, appId, VKAccessToken.tokenFromSharedPreferences(this, TOKEN_KEY));
+
+        if (VKSdk.wakeUpSession()) {
+            startActivity(new Intent(this, MainActivity.class));
+        }
 
         // Обработчик нажатия на кнопку логина через ВК
         findViewById(R.id.loginBtnVK).setOnClickListener(new View.OnClickListener() {
@@ -113,12 +117,9 @@ public class LoginActivity extends Activity {
             }
         });
 
-        // Проверка
-        if (VKSdk.wakeUpSession() || ParseUser.getCurrentUser() != null) {
-            startMainActivity();
-            return;
-        }
+
     }
+
 
     // Переопредение методов ВК
     private final VKSdkListener sdkListener = new VKSdkListener() {
@@ -161,8 +162,9 @@ public class LoginActivity extends Activity {
         startActivity(new Intent(this, MainActivity.class));
     }
 
+
     private void SignUpFromVK() {
-        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name,bdate, sex"));
+        final VKRequest request = VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "first_name, bdate, sex"));
 
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
@@ -202,6 +204,10 @@ public class LoginActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         VKUIHelper.onActivityResult(this,requestCode,resultCode,data);
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
     // Метод логина

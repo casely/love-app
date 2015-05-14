@@ -15,6 +15,8 @@
     <string name="radio_female">Женщина</string>
     <string name="dp">01.1.1990</string>
 
+    <string name="welcome_text_up">Добавь свои фотографии и интересы</string>
+
     <string name="error_intro">"Пожалуйста "</string>
     <string name="error_blank_username">введите почту</string>
     <string name="error_blank_password">введите пароль</string>
@@ -24,5 +26,13 @@
     <string name="progress_signup">Выполняется регистрация &#8230;</string>
     <string name="progress_login">Выполняется вход &#8230;</string>
     <string name="login">Вход</string>
-    <string name="logout">Выход</string>
+    <string name="logout">Выйти из аккаунта</string>
+    <string name="title_activity_start">StartActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_message">MessageActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
 </resources>

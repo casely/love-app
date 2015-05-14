@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.parse.ParseUser;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -35,7 +36,23 @@ public class ProfileActivity extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_profile, container, false);
 
-            final VKRequest request = VKApi.users().get
+        outputInformation();
+
+        // Кнопка настроек
+        Button mActionButton = (Button) rootView.findViewById(R.id.set_button);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return rootView;
+    }
+
+    private void outputInformation() {
+
+           final VKRequest request = VKApi.users().get
                     (VKParameters.from(VKApiConst.FIELDS, "first_name, photo_200, bdate"));
             request.executeWithListener(new VKRequest.VKRequestListener() {
                 @Override
@@ -56,21 +73,8 @@ public class ProfileActivity extends Fragment {
                     int age = getAge(dbirth, mbirth, ybirth);
 
                     t.setText(user.first_name + ", " + age);
-
                 }
             });
-
-
-        // Кнопка настроек
-        Button mActionButton = (Button) rootView.findViewById(R.id.set_button);
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        return rootView;
     }
 
     public int getAge(int day, int month, int year) {

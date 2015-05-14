@@ -67,20 +67,17 @@ public class LoginActivity extends Activity {
 
         VKSdk.initialize(sdkListener, appId, VKAccessToken.tokenFromSharedPreferences(this, TOKEN_KEY));
 
-        if (VKSdk.wakeUpSession()) {
-            startActivity(new Intent(this, MainActivity.class));
+
+        // Проверка был ли вход
+        if (VKSdk.wakeUpSession() || ParseUser.getCurrentUser() != null) {
+            startMainActivity();
         }
 
         // Обработчик нажатия на кнопку логина через ВК
         findViewById(R.id.loginBtnVK).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (VKSdk.isLoggedIn()) {
-                    VKSdk.logout();
-                }
-                else {
-                    VKSdk.authorize(scope, true, false);
-                }
+                   VKSdk.authorize(scope, true, false);
             }
         });
 
@@ -208,6 +205,7 @@ public class LoginActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+
     }
 
     // Метод логина

@@ -13,25 +13,7 @@
             style="@style/LoginFormContainer"
             android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/loginBtnVK"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/loginVK"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:layout_gravity="center_vertical"
-        android:layout_centerVertical="true"/>
 
-    <Button
-        android:id="@+id/signUpBtn"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Регистрация"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:layout_gravity="right"
-        android:layout_below="@+id/loginBtnVK"/>
 
     <EditText
         android:id="@+id/username"
@@ -59,8 +41,17 @@
         android:id="@+id/loginBtn"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:layout_below="@+id/password"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/password"/>
+
+    <Button
+        android:id="@+id/signUpBtn"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Регистрация"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:layout_gravity="right"
+        android:layout_below="@+id/loginBtnVK"/>
 
         </LinearLayout>
     </ScrollView>

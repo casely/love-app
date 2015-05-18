@@ -16,6 +16,8 @@
 
     <string name="welcome_text_up">Добавь свои фотографии и интересы</string>
 
+    <string name="error_list">Пользователи не найдены</string>>
+
     <string name="error_intro">"Пожалуйста "</string>
     <string name="error_blank_username">введите почту</string>
     <string name="error_blank_password">введите пароль</string>

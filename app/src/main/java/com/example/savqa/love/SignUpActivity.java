@@ -14,7 +14,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +45,7 @@ public class SignUpActivity extends Activity {
         }
     }
 
-    public void ShowDialog() {
+    public void showDialog() {
         dpDate = (EditText)findViewById(R.id.dp);
         dpDate.setInputType(InputType.TYPE_NULL);
         dpDate.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +88,7 @@ public class SignUpActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        ShowDialog();
+        showDialog();
         final Calendar cal = Calendar.getInstance();
         year_x = cal.get(Calendar.YEAR);
         month_x = cal.get(Calendar.MONTH);
@@ -104,7 +103,7 @@ public class SignUpActivity extends Activity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                    SignUp();
+                    signUp();
                     return true;
                 }
                 return false;
@@ -115,12 +114,12 @@ public class SignUpActivity extends Activity {
         Button mActionButton = (Button) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                SignUp();
+                signUp();
             }
         });
     }
 
-    private void SignUp() {
+    private void signUp() {
         String name = nameView.getText().toString().trim();
         String password = passwordView.getText().toString().trim();
         String passwordAgain = passwordAgainView.getText().toString().trim();

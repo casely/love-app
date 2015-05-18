@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.parse.ParseUser;
-import com.vk.sdk.VKSdk;
-
 
 public class SettingsActivity extends FragmentActivity {
 
@@ -23,9 +21,7 @@ public class SettingsActivity extends FragmentActivity {
         Button mActionButton = (Button) findViewById(R.id.logout_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (VKSdk.isLoggedIn()) {
-                    VKSdk.logout();
-                } else if (ParseUser.getCurrentUser() != null) {
+                if (ParseUser.getCurrentUser() != null) {
                     ParseUser.logOut();
                 }
                 startLoginActivity();

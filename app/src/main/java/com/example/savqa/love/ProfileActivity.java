@@ -34,7 +34,7 @@ public class ProfileActivity extends Fragment {
         int age = getAge(dbirth, mbirth, ybirth);
 
         TextView t = (TextView) rootView.findViewById(R.id.editText);
-        t.setText(firstName + ", " + age);
+       t.setText(firstName + ", " + age);
 
         // Кнопка настроек
         Button mActionButton = (Button) rootView.findViewById(R.id.set_button);

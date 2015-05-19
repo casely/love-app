@@ -1,6 +1,7 @@
 package com.example.savqa.love;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,7 +28,19 @@ public class SearchActivity extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_search, null);
+
+        View rootView = inflater.inflate(R.layout.activity_search, container, false);
+
+        // Кнопка настроек
+        Button mActionButton = (Button) rootView.findViewById(R.id.filter_button);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FilterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return rootView;
     }
 
     @Override
@@ -42,7 +56,7 @@ public class SearchActivity extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Поиск...");
+            pDialog.setMessage("Подождите, мы подбираем Вам пару");
             pDialog.setIndeterminate(false);
             pDialog.show();
         }
@@ -50,12 +64,16 @@ public class SearchActivity extends Fragment {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
+                int gender;
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
-                int gender = ParseUser.getCurrentUser().getInt("gender");
+
+                gender = ParseUser.getCurrentUser().getInt("gender");
+
                 if (gender == 1)
                     query.whereEqualTo("gender", 2);
                 else if (gender == 2)
                     query.whereEqualTo("gender", 1);
+
                 query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override
@@ -66,7 +84,7 @@ public class SearchActivity extends Fragment {
                             TextView lv = (TextView)getActivity().findViewById(R.id.empty_el);
 
                             if (parseUsers.size() == 0)
-                                lv.setText("Пользователи не найдены");
+                                lv.setText("Рядом с Вами нет новых людей");
 
                                 for (int i = 0; i < parseUsers.size(); i++) {
                                     resultsAsString[i] = parseUsers.get(i).getString("firstname");

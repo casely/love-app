@@ -16,7 +16,8 @@
 
     <string name="welcome_text_up">Добавь свои фотографии и интересы</string>
 
-    <string name="error_list">Пользователи не найдены</string>>
+    <string name="error_list">Пользователи не найдены</string>
+    <string name="filter">Фильтр</string>
 
     <string name="error_intro">"Пожалуйста "</string>
     <string name="error_blank_username">введите почту</string>
@@ -35,5 +36,6 @@
     <string name="title_activity_message">MessageActivity</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_filter">Фильтр</string>
 
 </resources>

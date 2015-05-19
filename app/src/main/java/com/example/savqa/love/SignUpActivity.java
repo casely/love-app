@@ -163,11 +163,13 @@ public class SignUpActivity extends Activity {
 
         // Создание нового юзера в таблице
         ParseUser user = new ParseUser();
+
         user.setUsername(email);
         user.put("firstname", name);
         user.setPassword(password);
-        user.setEmail(email);
+        //user.setEmail(email);
         user.put("dateofbirth", date);
+
 
         radioGenderGroup = (RadioGroup)findViewById(R.id.radioSex);
         switch (radioGenderGroup.getCheckedRadioButtonId()) {
@@ -182,7 +184,6 @@ public class SignUpActivity extends Activity {
                 break;
 
         }
-
 
         // Сохранение данных в таблицу
         user.signUpInBackground(new SignUpCallback() {

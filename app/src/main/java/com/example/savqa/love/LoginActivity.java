@@ -19,8 +19,6 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-
-
 public class LoginActivity extends Activity {
 
     private EditText emailEditText;

@@ -13,6 +13,7 @@ public class MainActivity extends FragmentActivity implements
     private ViewPager viewPager;
     private ViewPagerAdapter mAdapter;
     private ActionBar actionBar;
+
     // Tab titles
     private String[] tabs = { "Сообщения", "Знакомства", "Профиль" };
 
@@ -79,8 +80,4 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void onBackPressed() {
     }
-
-
-
-
 }

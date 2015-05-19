@@ -1,5 +1,8 @@
 package com.example.savqa.love;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,6 +14,8 @@ import com.parse.ParseUser;
 
 public class SettingsActivity extends FragmentActivity {
 
+    final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,13 +26,31 @@ public class SettingsActivity extends FragmentActivity {
         Button mActionButton = (Button) findViewById(R.id.logout_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (ParseUser.getCurrentUser() != null) {
-                    ParseUser.logOut();
-                }
-                startLoginActivity();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("Вы уверены?").setPositiveButton("Да", dialogClickListener)
+                        .setNegativeButton("Нет", dialogClickListener).show();
             }
         });
+
     }
+
+    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    if (ParseUser.getCurrentUser() != null) {
+                        ParseUser.logOut();
+                    }
+                    startLoginActivity();
+                    break;
+
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

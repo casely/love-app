@@ -24,11 +24,11 @@ public class SearchActivity extends Fragment {
 
     private ProgressDialog pDialog;
     String[] resultsAsString = {""};
+    int sex;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
         // Кнопка настроек
@@ -39,6 +39,12 @@ public class SearchActivity extends Fragment {
                 startActivity(intent);
             }
         });
+        // Условия вывода пользователей по умолчанию
+        // Если 1 - ж; 2 - м
+        if (ParseUser.getCurrentUser().getInt("gender") == 1)
+            sex = 2;
+        else if (ParseUser.getCurrentUser().getInt("gender") == 2)
+            sex = 1;
 
         return rootView;
     }
@@ -51,7 +57,6 @@ public class SearchActivity extends Fragment {
     }
 
     private class UserAsyncTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -64,36 +69,33 @@ public class SearchActivity extends Fragment {
         @Override
         protected Void doInBackground(Void... arg0) {
             try {
-                int gender;
+                // Проверяем, есть ли записи с полем sex в extra интента
+                if (getActivity().getIntent().getExtras() != null) {
+                    Bundle args = getActivity().getIntent().getExtras();
+                    sex = args.getInt("sex");
+                }
+                // Формирование запроса к parse.com
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
-
-                gender = ParseUser.getCurrentUser().getInt("gender");
-
-                if (gender == 1)
-                    query.whereEqualTo("gender", 2);
-                else if (gender == 2)
-                    query.whereEqualTo("gender", 1);
-
+                query.whereEqualTo("gender", sex);
                 query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override
                     public void done(List<ParseUser> parseUsers, ParseException e) {
-                        if (parseUsers != null) {
-                            resultsAsString = new String[parseUsers.size()];
-
+                    if (parseUsers != null) {
+                        resultsAsString = new String[parseUsers.size()];
                             TextView lv = (TextView)getActivity().findViewById(R.id.empty_el);
-
+                            // Вывод текста если нет пользователей
                             if (parseUsers.size() == 0)
                                 lv.setText("Рядом с Вами нет новых людей");
-
-                                for (int i = 0; i < parseUsers.size(); i++) {
-                                    resultsAsString[i] = parseUsers.get(i).getString("firstname");
-                                    ListView lvMain = (ListView) getView().findViewById(R.id.lwMain);
-                                    ArrayAdapter mArrayAdapter = new ArrayAdapter(
-                                            getActivity(), android.R.layout.simple_list_item_1, resultsAsString);
-                                    lvMain.setAdapter(mArrayAdapter);
-
-                                }
+                            // Вывод списка найденных пользователей
+                            for (int i = 0; i < parseUsers.size(); i++) {
+                                resultsAsString[i] = parseUsers.get(i).getString("firstname");
+                                ListView lvMain = (ListView) getView().findViewById(R.id.lwMain);
+                                ArrayAdapter mArrayAdapter = new ArrayAdapter(
+                                    getActivity(), android.R.layout.simple_list_item_1, resultsAsString);
+                                lvMain.setAdapter(mArrayAdapter);
+                            }
+                            // Закрытие диалога с баром
                             pDialog.dismiss();
                         } else {
                             e.printStackTrace();
@@ -106,5 +108,4 @@ public class SearchActivity extends Fragment {
             return null;
         }
     }
-
 }

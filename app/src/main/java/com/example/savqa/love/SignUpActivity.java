@@ -170,7 +170,6 @@ public class SignUpActivity extends Activity {
         //user.setEmail(email);
         user.put("dateofbirth", date);
 
-
         radioGenderGroup = (RadioGroup)findViewById(R.id.radioSex);
         switch (radioGenderGroup.getCheckedRadioButtonId()) {
             case R.id.radioMale:
@@ -182,7 +181,6 @@ public class SignUpActivity extends Activity {
             default:
                 Toast.makeText(SignUpActivity.this, "Выберите пол", Toast.LENGTH_LONG).show();
                 break;
-
         }
 
         // Сохранение данных в таблицу
@@ -202,7 +200,4 @@ public class SignUpActivity extends Activity {
             }
         });
     }
-
-
-
 }

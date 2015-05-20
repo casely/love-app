@@ -1,15 +1,15 @@
 package com.example.savqa.love;
 
-import com.parse.ParseUser;
-
-public class ParseHelper extends ParseUser {
+public class ParseHelper {
     public ParseHelper() {}
 
+    private int sex;
+
     public void setGender(int value) {
-        put("gender", value);
+        this.sex = value;
     }
 
     public int getGender() {
-        return getInt("gender");
+        return sex;
     }
 }

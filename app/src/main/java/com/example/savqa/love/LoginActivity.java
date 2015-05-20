@@ -74,11 +74,9 @@ public class LoginActivity extends Activity {
 
     // Метод логина
     private void userLogin() {
-
         // Получение значений с текстовых полей
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
-
         // Валидация (проверка ввода)
         boolean validationError = false;
         StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
@@ -94,19 +92,16 @@ public class LoginActivity extends Activity {
             validationErrorMessage.append(getString(R.string.error_blank_password));
         }
         validationErrorMessage.append(getString(R.string.error_end));
-
         // Выдача тоста при ошибке
         if (validationError) {
             Toast.makeText(LoginActivity.this, validationErrorMessage.toString(), Toast.LENGTH_LONG)
                     .show();
             return;
         }
-
         // Создание прогрессдиалога
         final ProgressDialog dialog = new ProgressDialog(LoginActivity.this);
         dialog.setMessage(getString(R.string.progress_login));
         dialog.show();
-
         // Проверка юзернэйма и пароля на совпадение со значениями в таблице
         ParseUser.logInInBackground(email, password, new LogInCallback() {
             @Override

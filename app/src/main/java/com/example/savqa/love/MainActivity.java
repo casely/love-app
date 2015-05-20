@@ -57,7 +57,6 @@ public class MainActivity extends FragmentActivity implements
             public void onPageScrollStateChanged(int arg0) {
             }
         });
-
         viewPager.setCurrentItem(1, false);
     }
 

@@ -21,7 +21,6 @@ public class SettingsActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-
         // Кнопка регистрации
         Button mActionButton = (Button) findViewById(R.id.logout_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
@@ -31,7 +30,6 @@ public class SettingsActivity extends FragmentActivity {
                         .setNegativeButton("Нет", dialogClickListener).show();
             }
         });
-
     }
 
     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -67,5 +65,4 @@ public class SettingsActivity extends FragmentActivity {
     private void startLoginActivity() {
         startActivity(new Intent(this, LoginActivity.class));
     }
-
 }

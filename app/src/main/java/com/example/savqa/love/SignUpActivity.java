@@ -23,6 +23,7 @@ import com.parse.SignUpCallback;
 import com.parse.ParseException;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class SignUpActivity extends Activity {
 
@@ -109,7 +110,6 @@ public class SignUpActivity extends Activity {
                 return false;
             }
         });
-
         // Кнопка регистрации
         Button mActionButton = (Button) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +125,14 @@ public class SignUpActivity extends Activity {
         String passwordAgain = passwordAgainView.getText().toString().trim();
         String email = emailView.getText().toString().trim();
         String date = dpDate.getText().toString().trim();
+
+        String birth[] = date.split("\\.");
+
+        int dBirth = Integer.parseInt(birth[0]);
+        int mBirth = Integer.parseInt(birth[1]);
+        int yBirth = Integer.parseInt(birth[2]);
+
+        int age = getAge(dBirth, mBirth, yBirth);
 
         // Проверка полей
         boolean validationError = false;
@@ -168,7 +176,7 @@ public class SignUpActivity extends Activity {
         user.put("firstname", name);
         user.setPassword(password);
         //user.setEmail(email);
-        user.put("dateofbirth", date);
+        user.put("age", age);
 
         radioGenderGroup = (RadioGroup)findViewById(R.id.radioSex);
         switch (radioGenderGroup.getCheckedRadioButtonId()) {
@@ -199,5 +207,22 @@ public class SignUpActivity extends Activity {
                 }
             }
         });
+    }
+
+    public int getAge(int day, int month, int year) {
+
+        GregorianCalendar cal = new GregorianCalendar();
+
+        int y = cal.get(Calendar.YEAR);
+        int m = cal.get(Calendar.MONTH) + 1;
+        int d = cal.get(Calendar.DAY_OF_MONTH);
+
+        int age = y - year;
+        if (m < month) {
+            age--;
+        } else if (m == month && d < day) {
+            age--;
+        }
+        return age;
     }
 }

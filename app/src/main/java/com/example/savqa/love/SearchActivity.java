@@ -25,6 +25,8 @@ public class SearchActivity extends Fragment {
     private ProgressDialog pDialog;
     String[] resultsAsString = {""};
     int sex;
+    int mini;
+    int maxi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,10 +75,17 @@ public class SearchActivity extends Fragment {
                 if (getActivity().getIntent().getExtras() != null) {
                     Bundle args = getActivity().getIntent().getExtras();
                     sex = args.getInt("sex");
+                    mini = args.getInt("min");
+                    maxi = args.getInt("max");
+
                 }
                 // Формирование запроса к parse.com
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
+
                 query.whereEqualTo("gender", sex);
+                query.whereGreaterThan("age", mini);
+                query.whereLessThan("age", maxi);
+
                 query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
                 query.findInBackground(new FindCallback<ParseUser>() {
                     @Override

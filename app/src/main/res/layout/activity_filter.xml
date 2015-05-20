@@ -32,12 +32,32 @@
 
     </RadioGroup>
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/minValue"
+        android:hint="min"
+        android:layout_below="@+id/radioFilterSex" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="3"
+        android:id="@+id/maxValue"
+        android:hint="max"
+        android:layout_below="@+id/minValue" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/filter_search"
         android:id="@+id/filterButton"
-        android:layout_below="@+id/radioFilterSex"
+        android:layout_below="@+id/maxValue"
         android:layout_centerHorizontal="true" />
+
+
 
 </RelativeLayout>

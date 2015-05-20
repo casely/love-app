@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -14,7 +15,12 @@ import com.parse.ParseUser;
 public class FilterActivity extends FragmentActivity {
 
     public RadioGroup radioGenderGroup;
+    public EditText minVal;
+    public EditText maxVal;
+
     int sex;
+    int mini;
+    int maxi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,9 @@ public class FilterActivity extends FragmentActivity {
 
         TextView t = (TextView) findViewById(R.id.whoFind);
         t.setText("Кого ищем, " + firstName + "?");
+
+        minVal = (EditText) findViewById(R.id.minValue);
+        maxVal = (EditText) findViewById(R.id.maxValue);
 
         Button mActionButton = (Button) findViewById(R.id.filterButton);
         mActionButton.setOnClickListener(new View.OnClickListener() {
@@ -41,8 +50,14 @@ public class FilterActivity extends FragmentActivity {
                     default:
                         break;
                 }
+
+                mini = Integer.parseInt(minVal.getText().toString());
+                maxi = Integer.parseInt(maxVal.getText().toString());
+
                 Intent i = new Intent(FilterActivity.this, MainActivity.class);
                 i.putExtra("sex", sex);
+                i.putExtra("min", mini);
+                i.putExtra("max", maxi);
                 startActivity(i);
             }
         });

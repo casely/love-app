@@ -11,9 +11,6 @@ import android.widget.TextView;
 
 import com.parse.ParseUser;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 public class ProfileActivity extends Fragment {
 
     @Override

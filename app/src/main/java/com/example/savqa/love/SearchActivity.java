@@ -27,6 +27,27 @@ public class SearchActivity extends Fragment {
     int sex;
     int mini;
     int maxi;
+    int age;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Условия вывода пользователей по умолчанию
+        // Если 1 - ж; 2 - м
+        age = ParseUser.getCurrentUser().getInt("age");
+        // Если женщина
+        if (ParseUser.getCurrentUser().getInt("gender") == 1) {
+            sex = 2;
+            mini = age - 2;
+            maxi = age + 10;
+        }
+        // Если мужчина
+        else if (ParseUser.getCurrentUser().getInt("gender") == 2) {
+            sex = 1;
+            mini = 18;
+            maxi = age + 2;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,12 +62,6 @@ public class SearchActivity extends Fragment {
                 startActivity(intent);
             }
         });
-        // Условия вывода пользователей по умолчанию
-        // Если 1 - ж; 2 - м
-        if (ParseUser.getCurrentUser().getInt("gender") == 1)
-            sex = 2;
-        else if (ParseUser.getCurrentUser().getInt("gender") == 2)
-            sex = 1;
 
         return rootView;
     }
@@ -83,8 +98,8 @@ public class SearchActivity extends Fragment {
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
 
                 query.whereEqualTo("gender", sex);
-                query.whereGreaterThan("age", mini);
-                query.whereLessThan("age", maxi);
+                query.whereGreaterThanOrEqualTo("age", mini);
+                query.whereLessThanOrEqualTo("age", maxi);
 
                 query.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
                 query.findInBackground(new FindCallback<ParseUser>() {

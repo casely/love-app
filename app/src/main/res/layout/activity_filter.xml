@@ -33,11 +33,18 @@
 
     </RadioGroup>
 
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/howAge"
+        android:textSize="20dp"
+        android:layout_below="@+id/radioFilterSex"
+        android:gravity="center"/>
+
 
     <LinearLayout android:id="@+id/seekbar_placeholder"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/radioFilterSex"
+        android:layout_below="@+id/howAge"
         android:layout_height="wrap_content"/>
 
     <Button

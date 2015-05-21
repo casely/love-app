@@ -427,8 +427,10 @@ public class RangeSeekBar<T extends Number> extends ImageView{
         paint.setAntiAlias(true);
 
         // draw min and max labels
-        String minLabel = getContext().getString(R.string.demo_min_label);
-        String maxLabel = getContext().getString(R.string.demo_max_label);
+        //String minLabel = getContext().getString(R.string.demo_min_label);
+        //String maxLabel = getContext().getString(R.string.demo_max_label);
+        String minLabel = String.valueOf(getSelectedMinValue());
+        String maxLabel = String.valueOf(getSelectedMaxValue());
         float minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel));
         float minMaxHeight = mTextOffset + thumbHalfHeight + mTextSize / 3;
         canvas.drawText(minLabel, 0, minMaxHeight, paint);
@@ -465,11 +467,11 @@ public class RangeSeekBar<T extends Number> extends ImageView{
                 selectedValuesAreDefault);
 
         // draw the text if sliders have moved from default edges
-        if (!selectedValuesAreDefault) {
+        /*if (!selectedValuesAreDefault) {
             paint.setTextSize(mTextSize);
             paint.setColor(Color.WHITE);
             // give text a bit more space here so it doesn't get cut off
-            int offset = PixelUtil.dpToPx(getContext(), TEXT_LATERAL_PADDING_IN_DP);
+            //int offset = PixelUtil.dpToPx(getContext(), TEXT_LATERAL_PADDING_IN_DP);
 
             String minText = String.valueOf(getSelectedMinValue());
             String maxText = String.valueOf(getSelectedMaxValue());
@@ -488,7 +490,7 @@ public class RangeSeekBar<T extends Number> extends ImageView{
                     normalizedToScreen(normalizedMaxValue) - maxTextWidth * 0.5f,
                     mDistanceToTop + mTextSize,
                     paint);
-        }
+        }*/
 
     }
 

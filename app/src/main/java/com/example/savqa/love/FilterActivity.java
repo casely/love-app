@@ -54,6 +54,9 @@ public class FilterActivity extends FragmentActivity {
             rangeSeekBar.setSelectedMaxValue(maxi);
         }
 
+        TextView txt = (TextView) findViewById(R.id.howAge);
+        txt.setText("Возраст: ");
+
         // Add to layout
         LinearLayout layout = (LinearLayout) findViewById(R.id.seekbar_placeholder);
         layout.addView(rangeSeekBar);

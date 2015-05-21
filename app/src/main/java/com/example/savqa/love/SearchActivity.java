@@ -1,7 +1,10 @@
 package com.example.savqa.love;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,6 +52,16 @@ public class SearchActivity extends Fragment {
         }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,8 +82,13 @@ public class SearchActivity extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        new UserAsyncTask().execute();
+        if (isNetworkConnected()) {
+            new UserAsyncTask().execute();
+        }
+        else {
+            TextView lv = (TextView) getActivity().findViewById(R.id.empty_el);
+            lv.setText("Подключение к интернету отсутствует");
+        }
     }
 
     private class UserAsyncTask extends AsyncTask<Void, Void, Void> {

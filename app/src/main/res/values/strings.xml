@@ -38,6 +38,6 @@
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="title_activity_filter">Фильтр</string>
 
-    <string name="filter_search">Готово!</string>
+    <string name="filter_search">Готово</string>
 
 </resources>

@@ -38,6 +38,41 @@ public class SignUpActivity extends Activity {
     private int year_x, month_x, day_x;
     static final int DIALOG_ID = 0;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sign_up);
+
+        showDialog();
+        final Calendar cal = Calendar.getInstance();
+        year_x = cal.get(Calendar.YEAR);
+        month_x = cal.get(Calendar.MONTH);
+        day_x = cal.get(Calendar.DAY_OF_MONTH);
+
+        nameView = (EditText) findViewById(R.id.name_edit_text);
+        passwordView = (EditText) findViewById(R.id.password_edit_text);
+        passwordAgainView = (EditText) findViewById(R.id.password_again_edit_text);
+        emailView = (EditText)findViewById(R.id.email_edit_text);
+
+        passwordAgainView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                    signUp();
+                    return true;
+                }
+                return false;
+            }
+        });
+        // Кнопка регистрации
+        Button mActionButton = (Button) findViewById(R.id.action_button);
+        mActionButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                signUp();
+            }
+        });
+    }
+
     public final static boolean isValidEmail(CharSequence target) {
         if (TextUtils.isEmpty(target)) {
             return false;
@@ -83,41 +118,6 @@ public class SignUpActivity extends Activity {
                     dpDate.setText(day_x + "." + month_x + "." + year_x);
                 }
             };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_up);
-
-        showDialog();
-        final Calendar cal = Calendar.getInstance();
-        year_x = cal.get(Calendar.YEAR);
-        month_x = cal.get(Calendar.MONTH);
-        day_x = cal.get(Calendar.DAY_OF_MONTH);
-
-        nameView = (EditText) findViewById(R.id.name_edit_text);
-        passwordView = (EditText) findViewById(R.id.password_edit_text);
-        passwordAgainView = (EditText) findViewById(R.id.password_again_edit_text);
-        emailView = (EditText)findViewById(R.id.email_edit_text);
-
-        passwordAgainView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                    signUp();
-                    return true;
-                }
-                return false;
-            }
-        });
-        // Кнопка регистрации
-        Button mActionButton = (Button) findViewById(R.id.action_button);
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                signUp();
-            }
-        });
-    }
 
     private void signUp() {
         String name = nameView.getText().toString().trim();

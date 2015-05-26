@@ -15,13 +15,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         switch (index) {
             case 0:
-                // Top Rated fragment activity
+                // Message fragment activity
                 return new MessageActivity();
             case 1:
-                // Games fragment activity
+                // Search activity
                 return new SearchActivity();
             case 2:
-                // Movies fragment activity
+                // Profile activity
                 return new ProfileActivity();
         }
 

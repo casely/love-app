@@ -5,14 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
 import com.parse.ParseUser;
 
-public class SettingsActivity extends FragmentActivity {
+public class SettingsActivity extends ActionBarActivity {
 
     final Context context = this;
 
@@ -20,7 +21,10 @@ public class SettingsActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        
         // Кнопка регистрации
         Button mActionButton = (Button) findViewById(R.id.logout_button);
         mActionButton.setOnClickListener(new View.OnClickListener() {

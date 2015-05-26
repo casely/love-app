@@ -2,7 +2,6 @@ package com.example.savqa.love;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -67,15 +65,6 @@ public class SearchActivity extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
-        // Кнопка настроек
-        Button mActionButton = (Button) rootView.findViewById(R.id.filter_button);
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), FilterActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return rootView;
     }
 
@@ -114,6 +103,8 @@ public class SearchActivity extends Fragment {
                 }
                 // Формирование запроса к parse.com
                 ParseQuery<ParseUser> query = ParseUser.getQuery();
+
+                query.setLimit(1000);
 
                 query.whereEqualTo("gender", sex);
                 query.whereGreaterThanOrEqualTo("age", mini);

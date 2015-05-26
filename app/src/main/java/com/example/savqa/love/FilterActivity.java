@@ -1,8 +1,10 @@
 package com.example.savqa.love;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +15,7 @@ import android.widget.LinearLayout;
 
 import com.parse.ParseUser;
 
-public class FilterActivity extends FragmentActivity {
+public class FilterActivity extends ActionBarActivity {
 
     public RadioGroup radioGenderGroup;
 
@@ -22,11 +24,48 @@ public class FilterActivity extends FragmentActivity {
     int maxi;
     int age;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState != null) {
+            this.sex = savedInstanceState.getInt("sex");
+            this.mini = savedInstanceState.getInt("min");
+            this.maxi = savedInstanceState.getInt("max");
+        }
+
+
+        setFilterSettings();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_filter, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setFilterSettings() {
+
+        final RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<>(this);
 
         String firstName = ParseUser.getCurrentUser().getString("firstname");
 
@@ -35,7 +74,6 @@ public class FilterActivity extends FragmentActivity {
 
         age = ParseUser.getCurrentUser().getInt("age");
 
-        final RangeSeekBar<Integer> rangeSeekBar = new RangeSeekBar<>(this);
         rangeSeekBar.setRangeValues(15, 90);
 
         radioGenderGroup = (RadioGroup)findViewById(R.id.radioFilterSex);
@@ -64,7 +102,6 @@ public class FilterActivity extends FragmentActivity {
         Button mActionButton = (Button) findViewById(R.id.filterButton);
         mActionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
                 switch (radioGenderGroup.getCheckedRadioButtonId()) {
                     case R.id.radioMan:
                         sex = 2;
@@ -86,16 +123,5 @@ public class FilterActivity extends FragmentActivity {
                 startActivity(i);
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 }

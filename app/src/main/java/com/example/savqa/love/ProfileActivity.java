@@ -1,12 +1,10 @@
 package com.example.savqa.love;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
@@ -23,15 +21,6 @@ public class ProfileActivity extends Fragment {
 
         TextView t = (TextView) rootView.findViewById(R.id.editText);
         t.setText(firstName + ", " + age);
-
-        // Кнопка настроек
-        Button mActionButton = (Button) rootView.findViewById(R.id.set_button);
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
 
         return rootView;
     }
